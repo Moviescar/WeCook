@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Models/user.dart';
-import 'package:flutter_application_1/Pages/RecipeMaker.dart';
-import 'package:flutter_application_1/Providers/UserProvider.dart';
+import 'package:flutter_application_1/Pages/NewRecipeMaker.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import '../main.dart';
 import 'Signup.dart';
-import 'dart:convert';
+import '../SharedPrefs.dart';
+
 
 class Login extends StatefulWidget {
+
   const Login({
     Key? key,
   }) : super(key: key);
@@ -19,9 +18,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final email = TextEditingController();
   final password = TextEditingController();
+  SharedPref sharedPref = SharedPref();
 
   @override
   void dispose() {
@@ -31,7 +30,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -94,11 +92,8 @@ class _LoginState extends State<Login> {
                             ),
                           );
                         if(response.body.isNotEmpty){
-                          print(response.body);
-                          Map<String, dynamic> map = jsonDecode(response.body);
-                          var user = User(map["id"],map["email"],map["firstName"],map["lastName"]);
-                          userProvider.setUser(user);
-                          print(userProvider.getUser().email);
+                          sharedPref.save('user', response.body);
+                          print(await sharedPref.read('user'));
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => RecipeMaker()),
