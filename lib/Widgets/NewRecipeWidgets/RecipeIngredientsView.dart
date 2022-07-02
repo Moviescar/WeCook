@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/NewRecipeProvider.dart';
@@ -20,20 +21,23 @@ Visibility RecipeIngredientsView(BuildContext context) {
           color: Colors.orangeAccent,
         ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         TextField(
+          maxLength: 55,
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
           controller: newRecipeProvider.ingredientName,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Ingredient Name',
           ),
         ),
-        const SizedBox(height: 20),
         Row(
           children: [
             SizedBox(
               width: 270.0,
               child: TextField(
+                maxLength: 4,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 controller: newRecipeProvider.ingredientAmount,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),

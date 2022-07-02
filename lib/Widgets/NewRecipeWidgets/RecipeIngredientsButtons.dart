@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/Ingredient.dart';
+import '../../Models/ShowElement.dart';
 import '../../Providers/NewRecipeProvider.dart';
 
 Visibility RecipeIngredientsButtons(BuildContext context) {
@@ -23,9 +24,10 @@ Visibility RecipeIngredientsButtons(BuildContext context) {
         ElevatedButton(
           onPressed: () {
             newRecipeProvider.addIngredient(
-                Ingredient(ingredientname: newRecipeProvider.ingredientName.text,amount: int.parse(newRecipeProvider.ingredientAmount.text),amountType: newRecipeProvider.ingredientType)
+                Ingredient(ingredientName: newRecipeProvider.ingredientName.text,amount: int.parse(newRecipeProvider.ingredientAmount.text),amountType: newRecipeProvider.ingredientType)
             );
             newRecipeProvider.incrementAmountOfIngredients();
+            newRecipeProvider.addShowIngredient(ShowElement(TextOverflow.ellipsis, 3));
             newRecipeProvider.ingredientName.text = "";
             newRecipeProvider.ingredientAmount.text = "";
             FocusManager.instance.primaryFocus?.unfocus();

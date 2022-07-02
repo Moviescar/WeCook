@@ -6,23 +6,23 @@ String ingredientToJson(Ingredient data) => json.encode(data.toJson());
 
 class Ingredient {
   Ingredient({
-    required this.ingredientname,
+    required this.ingredientName,
     required this.amount,
     required this.amountType,
   });
 
-  String ingredientname;
+  String ingredientName;
   int amount;
   String amountType;
 
   factory Ingredient.fromJson(Map<String, dynamic> json) => Ingredient(
-    ingredientname: json["ingredientname"],
+    ingredientName: json["ingredientName"],
     amount: json["amount"],
     amountType: json["amountType"],
   );
 
   Map<String, dynamic> toJson() => {
-    "ingredientname": ingredientname,
+    "ingredientName": ingredientName,
     "amount": amount,
     "amountType": amountType,
   };

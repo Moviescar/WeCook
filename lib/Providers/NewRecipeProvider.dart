@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Models/ShowElement.dart';
 
 import '../Models/Ingredient.dart';
 import '../Models/Instruction.dart';
@@ -15,6 +16,8 @@ class NewRecipeProvider with ChangeNotifier {
   String _ingredientType = "Gram";
   List<Ingredient> _ingredients = [];
   List<Instruction> _instructions = [];
+  List<ShowElement> _showInstruction = [];
+  List<ShowElement> _showIngredient = [];
 
 
   var _nameVisible = true;
@@ -22,10 +25,6 @@ class NewRecipeProvider with ChangeNotifier {
   var _stepVisible = false;
 
   SharedPref _sharedPref = SharedPref();
-
-  var _visible = false;
-  int? _maxlines = 3;
-  TextOverflow? _overflow = TextOverflow.ellipsis;
 
   get amountOfIngredients => _amountOfIngredients;
 
@@ -89,28 +88,6 @@ class NewRecipeProvider with ChangeNotifier {
     _sharedPref = value;
     notifyListeners();
   }
-
-  get visible => _visible;
-
-  set visible(value) {
-    _visible = value;
-    notifyListeners();
-  }
-
-  int? get maxlines => _maxlines;
-
-  set maxlines(int? value) {
-    _maxlines = value;
-    notifyListeners();
-  }
-
-  TextOverflow? get overflow => _overflow;
-
-  set overflow(TextOverflow? value) {
-    _overflow = value;
-    notifyListeners();
-  }
-
   addIngredient(Ingredient value) {
     _ingredients.add(value);
     notifyListeners();
@@ -122,11 +99,11 @@ class NewRecipeProvider with ChangeNotifier {
   }
 
   incrementAmountOfIngredients(){
-    amountOfIngredients++;
+    _amountOfIngredients++;
     notifyListeners();
   }
   incrementAmountOfInstructions(){
-    amountOfSteps++;
+    _amountOfSteps++;
     notifyListeners();
   }
 
@@ -136,19 +113,53 @@ class NewRecipeProvider with ChangeNotifier {
     notifyListeners();
   }
   void toggleIngredientAndInstructions(){
-    stepVisible = !stepVisible;
-    ingredientVisible = !ingredientVisible;
+    _stepVisible = !_stepVisible;
+    _ingredientVisible = !_ingredientVisible;
     notifyListeners();
   }
   void toggleElementVisible(){
-    _visible = !_visible;
-    if(visible){
-      maxlines = 3;
-      overflow = TextOverflow.ellipsis;
-    }else{
-      maxlines = null;
-      overflow = null;
-    }
     notifyListeners();
   }
+
+  void deleteInstruction(int index){
+    _instructions.remove(_instructions[index]);
+    _amountOfSteps--;
+    notifyListeners();
+  }
+
+  void deleteIngredient(int index){
+    _ingredients.remove(_ingredients[index]);
+    _amountOfIngredients--;
+    notifyListeners();
+  }
+  void addShowInstruction(ShowElement value){
+    _showInstruction.add(value);
+    notifyListeners();
+  }
+
+  void addShowIngredient(ShowElement value){
+    _showIngredient.add(value);
+    notifyListeners();
+  }
+  void toggleShowInstruction(int index){
+    toggleShow(_showInstruction, index);
+    notifyListeners();
+  }
+
+  void toggleShowIngredient(int index){
+    toggleShow(_showIngredient, index);
+    notifyListeners();
+  }
+  
+  void toggleShow(List<ShowElement> list, index){
+    if(list[index].maxLines == 2){
+      list[index].maxLines = null;
+      list[index].overflow = null;
+    }else{
+      list[index].maxLines = 2;
+      list[index].overflow = TextOverflow.ellipsis;
+    }
+  }
+  List<ShowElement> get showInstruction => _showInstruction;
+  List<ShowElement> get showIngredient => _showIngredient;
 }

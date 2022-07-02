@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Models/ShowElement.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/Instruction.dart';
@@ -19,27 +20,27 @@ getUserId() async{
 }
 
 Visibility RecipeInstructionsButtons(BuildContext context){
-  final read = context.read<NewRecipeProvider>();
-  final watch = context.watch<NewRecipeProvider>();
+  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,
     maintainState: true,
-    visible: watch.stepVisible,
+    visible: newRecipeProvider.stepVisible,
     child: Row(
       children: [
         ElevatedButton(
           onPressed: () {
-            watch.toggleIngredientAndInstructions();
+            newRecipeProvider.toggleIngredientAndInstructions();
           },
           child: const Text('Previous Step'),
         ),
         Spacer(),
         ElevatedButton(
           onPressed: () {
-            read.addInstruction(Instruction(stepNumber: read.amountOfSteps, instruction:watch.stepInstruction.text));
-            read.incrementAmountOfInstructions();
-            read.stepInstruction.text = "";
+            newRecipeProvider.addInstruction(Instruction(stepNumber: newRecipeProvider.amountOfSteps, instruction:newRecipeProvider.stepInstruction.text));
+            newRecipeProvider.incrementAmountOfInstructions();
+            newRecipeProvider.addShowInstruction(ShowElement(TextOverflow.ellipsis, 3));
+            newRecipeProvider.stepInstruction.text = "";
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: const Text('Add Instruction'),
@@ -55,9 +56,9 @@ Visibility RecipeInstructionsButtons(BuildContext context){
               },
               body: jsonEncode(<String, dynamic>{
                 "account": ownerId,
-                "recipeName": read.stepInstruction.text,
-                "ingredients": read.ingredients,
-                "steps": read.instructions
+                "recipeName": newRecipeProvider.recipeName.text,
+                "ingredient": newRecipeProvider.ingredients,
+                "step": newRecipeProvider.instructions
               }
               ),
             );

@@ -14,11 +14,17 @@ import '../Widgets/NewRecipeWidgets/RecipeNameButtons.dart';
 import '../Widgets/NewRecipeWidgets/RecipeNameView.dart';
 
 
-class RecipeMaker extends StatelessWidget {
-
+class RecipeMaker extends StatefulWidget {
 
   RecipeMaker({Key? key}) : super(key: key);
+
+  @override
+  State<RecipeMaker> createState() => _RecipeMakerState();
+}
+
+class _RecipeMakerState extends State<RecipeMaker> {
   SharedPref sharedPref = SharedPref();
+
   BoxDecoration myBoxDecoration() {
     return const BoxDecoration(
       color: Colors.red,
@@ -30,7 +36,7 @@ class RecipeMaker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    NewRecipeProvider newRecipeProvider = Provider.of(context, listen: true);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -72,8 +78,4 @@ class RecipeMaker extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 }
