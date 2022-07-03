@@ -10,18 +10,20 @@ String recipeToJson(Recipe data) => json.encode(data.toJson());
 
 class Recipe {
   Recipe({
-    required this.ownerId,
+    this.id,
+    this.ownerId,
     required this.recipeName,
     required this.ingredients,
     required this.steps,
   });
-
-  int ownerId;
+  int? id;
+  int? ownerId;
   String recipeName;
   List<Ingredient> ingredients;
   List<Instruction> steps;
 
   factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
+    id: json["id"],
     ownerId: json["ownerId"],
     recipeName: json["recipeName"],
     ingredients: List<Ingredient>.from(json["ingredients"].map((x) => x)),
@@ -29,6 +31,7 @@ class Recipe {
   );
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "ownerId": ownerId,
     "recipeName": recipeName,
     "ingredients": List<Ingredient>.from(ingredients.map((x) => x)),

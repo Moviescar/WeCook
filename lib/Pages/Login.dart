@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Models/User.dart';
 import 'package:flutter_application_1/Pages/NewRecipeMaker.dart';
+import 'package:flutter_application_1/Providers/RecipeListProvider.dart';
+import 'package:flutter_application_1/Widgets/Header.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../main.dart';
 import 'Signup.dart';
 import '../SharedPrefs.dart';
@@ -28,18 +32,30 @@ class _LoginState extends State<Login> {
     password.dispose();
   }
 
+  getAllUserRecipes(RecipeListProvider recipeListProvider) async {
+    final response = await http.get(
+      Uri.parse('${MyApp.urlPrefix}/user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    List<dynamic> list = json.decode(response.body);
+    List<User> users = [];
+    for(var user in list){
+      users.add(user);
+    }
+    sharedPref.save('users', users);
+    recipeListProvider.users = users;
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-          title: const Text(
-            'WeCook' ,style: TextStyle(
-            fontSize: 40,
-            color: Colors.orangeAccent,
-          ),
-          ),
-          backgroundColor: Colors.white),
+      appBar: Header(),
       body: SingleChildScrollView(
         child:Container(
           margin: new EdgeInsets.symmetric(horizontal: 30.0),
@@ -93,11 +109,8 @@ class _LoginState extends State<Login> {
                           );
                         if(response.body.isNotEmpty){
                           sharedPref.save('user', response.body);
-                          print(await sharedPref.read('user'));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RecipeMaker()),
-                          );
+                          getAllUserRecipes(recipeListProvider);
+                          Navigator.pushNamed(context, '/recipeList');
                         }
                       },
                       child: const Text('Login'),
@@ -107,10 +120,7 @@ class _LoginState extends State<Login> {
                     width: 160,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Signup()),
-                        );
+                        Navigator.pushNamed(context, '/signup');
                       },
                       child: const Text('Sign up'),
                     ),

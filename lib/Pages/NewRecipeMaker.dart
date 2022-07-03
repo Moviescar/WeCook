@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Providers/NewRecipeProvider.dart';
 import 'package:flutter_application_1/SharedPrefs.dart';
+import 'package:flutter_application_1/Widgets/Header.dart';
 import 'package:provider/provider.dart';
-import '../Models/Ingredient.dart';
-import '../Widgets/NewRecipeWidgets/InstructionElement.dart';
 import '../Widgets/NewRecipeWidgets/RecipeIngredientsButtons.dart';
 import '../Widgets/NewRecipeWidgets/RecipeIngredientsView.dart';
 import '../Widgets/NewRecipeWidgets/RecipeInstructionsButtons.dart';
@@ -36,17 +35,9 @@ class _RecipeMakerState extends State<RecipeMaker> {
 
   @override
   Widget build(BuildContext context) {
-    NewRecipeProvider newRecipeProvider = Provider.of(context, listen: true);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-        'WeCook' ,style: TextStyle(
-        fontSize: 40,
-        color: Colors.orangeAccent,
-        ),
-      ),
-      backgroundColor: Colors.white),
+      appBar: Header(),
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),

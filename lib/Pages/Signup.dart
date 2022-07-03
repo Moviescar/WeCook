@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Models/SignupValidity.dart';
 import 'package:flutter_application_1/Pages/Login.dart';
 import 'package:http/http.dart' as http;
+import '../Widgets/Header.dart';
 import '../main.dart';
 
 
@@ -23,9 +25,7 @@ class _SignupState extends State<Signup> {
 
   final lastName = TextEditingController();
 
-  var emailExists = false;
-  var oneFieldEmpty = false;
-  var formReady = true;
+  var valid = SignupValidity();
 
 
 
@@ -37,12 +37,7 @@ class _SignupState extends State<Signup> {
     lastName.dispose();
   }
 
-  void update() {
-    setState(() {
-    });
-  }
-
-  Future<bool> emailExist() async {
+  checkEmailAvailable() async {
     final response = await http.post(
       Uri.parse('${MyApp.urlPrefix}/user/exist'),
       headers: <String, String>{
@@ -52,43 +47,42 @@ class _SignupState extends State<Signup> {
         'email': email.text,
       }),
     );
-    print(response.body);
-    return response.body == 'true';
+    setState(() {
+      if(response.body == 'true'){
+        valid.emailAvailable = false;
+        valid.formReady = false;
+      }
+    });
+
+  }
+  checkEmptyField(){
+    setState(() {
+      if ([email.text, password.text, firstName.text, lastName.text].any((element) => element == '')) {
+        valid.allFieldsFilled = false;
+        valid.formReady = false;
+      }
+    });
   }
 
   validityCheck() async {
-    emailExists = false;
-    oneFieldEmpty = false;
-    formReady = true;
-
-    if(email.text.isEmpty) {
-      oneFieldEmpty = true;
-      formReady = false;
-    }else{
-      if(await emailExist()){
-        emailExists = true;
-        formReady = false;
-      }else{
-        emailExists = false;
-      }
-    }
-    if(password.text.isEmpty){
-      oneFieldEmpty = true;
-      formReady = false;
-    }
-    if(firstName.text.isEmpty){
-      oneFieldEmpty = true;
-      formReady = false;
-    }
-    if(lastName.text.isEmpty){
-      oneFieldEmpty = true;
-      formReady = false;
-    }
+    resetValidity();
+    await checkEmailAvailable();
+    checkEmptyField();
   }
+
+  resetValidity(){
+    setState((){
+      valid.emailAvailable = true;
+      valid.allFieldsFilled = true;
+      valid.formReady = true;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Header(),
       resizeToAvoidBottomInset : true,
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 30.0),
@@ -138,20 +132,23 @@ class _SignupState extends State<Signup> {
                   hintText: 'Last name',
                 ),
               ),
-              Visibility(
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                visible: emailExists,
-                child: const Text("Email not available.",style: TextStyle(color: Colors.red)),
+              const SizedBox(height: 20),
+              Container(
+                height: 50,
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: !valid.emailAvailable,
+                      child: const Text("Email not available.",style: TextStyle(color: Colors.red)),
+                    ),
+                    Visibility(
+                      visible: !valid.allFieldsFilled,
+                      child: const Text("All fields are required.",style: TextStyle(color: Colors.red),),
+                    ),
+                  ],
+                ),
               ),
-              Visibility(
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                visible: oneFieldEmpty,
-                child: const Text("All fields are required.",style: TextStyle(color: Colors.red),),
-              ),
+
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,8 +170,8 @@ class _SignupState extends State<Signup> {
                     width: 160,
                     child: ElevatedButton(
                       onPressed: () async {
-                        validityCheck();
-                        if (formReady){
+                        await validityCheck();
+                        if (valid.formReady){
                           http.post(
                             Uri.parse('${MyApp.urlPrefix}/user'),
                             headers: <String, String>{
@@ -187,9 +184,7 @@ class _SignupState extends State<Signup> {
                               'lastName': lastName.text
                             }),
                           );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Login()),
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => Login()),
                           );
                         }
                       },
