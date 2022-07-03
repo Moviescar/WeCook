@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../Providers/NewRecipeProvider.dart';
 
 Visibility RecipeNameView(BuildContext context) {
-  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
+  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: true);
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,

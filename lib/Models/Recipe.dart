@@ -1,40 +1,32 @@
+import 'package:flutter/material.dart';
 
-import 'dart:convert';
-
-import 'package:flutter_application_1/Models/Ingredient.dart';
-import 'package:flutter_application_1/Models/Instruction.dart';
-
-Recipe recipeFromJson(String str) => Recipe.fromJson(json.decode(str));
-
-String recipeToJson(Recipe data) => json.encode(data.toJson());
+import 'Ingredient.dart';
+import 'Instruction.dart';
 
 class Recipe {
   Recipe({
     this.id,
-    this.ownerId,
     required this.recipeName,
-    required this.ingredients,
-    required this.steps,
+    required this.ingredient,
+    required this.step,
   });
+
   int? id;
-  int? ownerId;
   String recipeName;
-  List<Ingredient> ingredients;
-  List<Instruction> steps;
+  List<Ingredient> ingredient;
+  List<Instruction> step;
 
   factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
     id: json["id"],
-    ownerId: json["ownerId"],
     recipeName: json["recipeName"],
-    ingredients: List<Ingredient>.from(json["ingredients"].map((x) => x)),
-    steps: List<Instruction>.from(json["steps"].map((x) => x)),
+    ingredient: List<Ingredient>.from(json["ingredient"].map((x) => Ingredient.fromJson(x))),
+    step: List<Instruction>.from(json["step"].map((x) => Instruction.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "ownerId": ownerId,
     "recipeName": recipeName,
-    "ingredients": List<Ingredient>.from(ingredients.map((x) => x)),
-    "steps": List<Instruction>.from(steps.map((x) => x)),
+    "ingredient": List<dynamic>.from(ingredient.map((x) => x.toJson())),
+    "step": List<dynamic>.from(step.map((x) => x.toJson())),
   };
 }

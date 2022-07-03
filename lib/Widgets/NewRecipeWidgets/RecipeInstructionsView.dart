@@ -5,7 +5,7 @@ import '../../Providers/NewRecipeProvider.dart';
 import 'InstructionElement.dart';
 
 Visibility RecipeInstructionsView(BuildContext context) {
-  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
+  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: true);
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../Models/Instruction.dart';
 import '../../Models/User.dart';
 import '../../Providers/NewRecipeProvider.dart';
+import '../../Providers/RecipeListProvider.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/SharedPrefs.dart';
@@ -14,13 +15,13 @@ import 'package:flutter_application_1/SharedPrefs.dart';
 getUserId() async{
   SharedPref sharedPref = SharedPref();
   String userPref = await sharedPref.read('user');
-  int id = userFromJson(userPref).id;
-  print(id);
+  int? id =  userFromJson(userPref).id;
   return id;
 }
 
 Visibility RecipeInstructionsButtons(BuildContext context){
   NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
+  RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,
@@ -62,6 +63,8 @@ Visibility RecipeInstructionsButtons(BuildContext context){
               }
               ),
             );
+            recipeListProvider.getAllUserRecipes();
+            Navigator.pushNamed(context, '/recipeList');
           },
           child: const Text('Next Step'),
         ),

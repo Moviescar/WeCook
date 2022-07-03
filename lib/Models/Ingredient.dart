@@ -1,9 +1,3 @@
-import 'dart:convert';
-
-Ingredient ingredientFromJson(String str) => Ingredient.fromJson(json.decode(str));
-
-String ingredientToJson(Ingredient data) => json.encode(data.toJson());
-
 class Ingredient {
   Ingredient({
     this.id,
@@ -11,6 +5,7 @@ class Ingredient {
     required this.amount,
     required this.amountType,
   });
+
   int? id;
   String ingredientName;
   int amount;

@@ -1,21 +1,23 @@
 import 'dart:convert';
 
-import 'package:flutter_application_1/Models/Recipe.dart';
+import 'Recipe.dart';
+
+List<User> userListFromJson(String str) => List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
-String userToJson(User data) => json.encode(data.toJson());
+String userToJson(List<User> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class User {
   User({
-    required this.id,
+    this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
     required this.recipe,
   });
 
-  int id;
+  int? id;
   String email;
   String firstName;
   String lastName;
@@ -26,7 +28,7 @@ class User {
     email: json["email"],
     firstName: json["firstName"],
     lastName: json["lastName"],
-    recipe: List<Recipe>.from(json["recipe"].map((x) => x)),
+    recipe: List<Recipe>.from(json["recipe"].map((x) => Recipe.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +36,6 @@ class User {
     "email": email,
     "firstName": firstName,
     "lastName": lastName,
-    "recipe": List<Recipe>.from(recipe.map((x) => x)),
+    "recipe": List<dynamic>.from(recipe.map((x) => x.toJson())),
   };
 }

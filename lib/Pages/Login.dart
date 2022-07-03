@@ -32,23 +32,7 @@ class _LoginState extends State<Login> {
     password.dispose();
   }
 
-  getAllUserRecipes(RecipeListProvider recipeListProvider) async {
-    final response = await http.get(
-      Uri.parse('${MyApp.urlPrefix}/user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
 
-    List<dynamic> list = json.decode(response.body);
-    List<User> users = [];
-    for(var user in list){
-      users.add(user);
-    }
-    sharedPref.save('users', users);
-    recipeListProvider.users = users;
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +93,7 @@ class _LoginState extends State<Login> {
                           );
                         if(response.body.isNotEmpty){
                           sharedPref.save('user', response.body);
-                          getAllUserRecipes(recipeListProvider);
+                          await recipeListProvider.getAllUserRecipes();
                           Navigator.pushNamed(context, '/recipeList');
                         }
                       },

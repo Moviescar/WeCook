@@ -117,9 +117,6 @@ class NewRecipeProvider with ChangeNotifier {
     _ingredientVisible = !_ingredientVisible;
     notifyListeners();
   }
-  void toggleElementVisible(){
-    notifyListeners();
-  }
 
   void deleteInstruction(int index){
     _instructions.remove(_instructions[index]);

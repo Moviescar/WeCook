@@ -6,7 +6,7 @@ import '../../Providers/NewRecipeProvider.dart';
 import 'IngredientElement.dart';
 
 Visibility RecipeIngredientsView(BuildContext context) {
-  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
+  NewRecipeProvider newRecipeProvider = Provider.of(context, listen: true);
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,
