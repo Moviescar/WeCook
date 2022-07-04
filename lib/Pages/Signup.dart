@@ -5,6 +5,7 @@ import 'package:flutter_application_1/Models/SignupValidity.dart';
 import 'package:flutter_application_1/Pages/Login.dart';
 import 'package:http/http.dart' as http;
 import '../Widgets/Header.dart';
+import '../Widgets/InternetDialog.dart';
 import '../main.dart';
 
 
@@ -37,22 +38,28 @@ class _SignupState extends State<Signup> {
     lastName.dispose();
   }
 
-  checkEmailAvailable() async {
-    final response = await http.post(
-      Uri.parse('${MyApp.urlPrefix}/user/exist'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email.text,
-      }),
-    );
-    setState(() {
-      if(response.body == 'true'){
-        valid.emailAvailable = false;
-        valid.formReady = false;
-      }
-    });
+  checkEmailAvailable(context) async {
+    try{
+      final response = await http.post(
+        Uri.parse('${MyApp.urlPrefix}/user/exist'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email.text,
+        }),
+      );
+      setState(() {
+        if(response.body == 'true'){
+          valid.emailAvailable = false;
+          valid.formReady = false;
+        }
+      });
+    }catch(e){
+      InternetDialog internetDialog = InternetDialog();
+      internetDialog.showcontent(context);
+    }
+
 
   }
   checkEmptyField(){
@@ -64,9 +71,9 @@ class _SignupState extends State<Signup> {
     });
   }
 
-  validityCheck() async {
+  validityCheck(context) async {
     resetValidity();
-    await checkEmailAvailable();
+    await checkEmailAvailable(context);
     checkEmptyField();
   }
 
@@ -78,25 +85,24 @@ class _SignupState extends State<Signup> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Header(),
       resizeToAvoidBottomInset : true,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 30.0),
+        margin: const EdgeInsets.symmetric(horizontal: 30.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
               const Text(
                 'Sign up' ,style: TextStyle(
                 fontSize: 24,
                 color: Colors.orangeAccent,
               ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: email,
                 decoration: const InputDecoration(
@@ -159,7 +165,7 @@ class _SignupState extends State<Signup> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Login()),
+                          MaterialPageRoute(builder: (context) => const Login()),
                         );
                       },
                       child: const Text('Login'),
@@ -170,23 +176,28 @@ class _SignupState extends State<Signup> {
                     width: 160,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await validityCheck();
-                        if (valid.formReady){
-                          http.post(
-                            Uri.parse('${MyApp.urlPrefix}/user'),
-                            headers: <String, String>{
-                              'Content-Type': 'application/json; charset=UTF-8',
-                            },
-                            body: jsonEncode(<String, String>{
-                              'email': email.text,
-                              'password': password.text,
-                              'firstName': firstName.text,
-                              'lastName': lastName.text
-                            }),
-                          );
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => Login()),
-                          );
+                        try{
+                          await validityCheck(context);
+                          if (valid.formReady){
+                            http.post(
+                              Uri.parse('${MyApp.urlPrefix}/user'),
+                              headers: <String, String>{
+                                'Content-Type': 'application/json; charset=UTF-8',
+                              },
+                              body: jsonEncode(<String, String>{
+                                'email': email.text,
+                                'password': password.text,
+                                'firstName': firstName.text,
+                                'lastName': lastName.text
+                              }),
+                            );
+                            Navigator.pushNamed(context, 'login');
+                          }
+                        }catch(e){
+                          InternetDialog internetDialog = InternetDialog();
+                          internetDialog.showcontent(context);
                         }
+
                       },
                       child: const Text('Sign up'),
                     ),

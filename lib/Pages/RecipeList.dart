@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Models/User.dart';
 import 'package:flutter_application_1/Models/UserAndRecipe.dart';
+import 'package:flutter_application_1/Providers/MyRecipeProvider.dart';
 import 'package:flutter_application_1/Providers/RecipeListProvider.dart';
+import 'package:flutter_application_1/SharedPrefs.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widgets/Header.dart';
 
@@ -29,6 +33,8 @@ class _RecipeListState extends State<RecipeList> {
   @override
   Widget build(BuildContext context) {
     RecipeListProvider recipeListProvider = Provider.of(context, listen: true);
+    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
+    SharedPref sharedPref = SharedPref();
 
     getUserAndRecipe(int? id){
       var users = recipeListProvider.users;
@@ -164,14 +170,25 @@ class _RecipeListState extends State<RecipeList> {
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      myRecipeProvider.user = userFromJson(await sharedPref.read("user"));
                       Navigator.pushNamed(context, '/myRecipe');
                     },
                     child: const Text("My Recipe's"),
                   ),
                   Spacer(),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      SharedPreferences preferences = await SharedPreferences.getInstance();
+                      await preferences.clear();
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    child: const Text("Logout"),
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () async {
+                      myRecipeProvider.user = userFromJson(await sharedPref.read("user"));
                       Navigator.pushNamed(context, '/newRecipe');
                     },
                     child: const Text('New Recipe'),

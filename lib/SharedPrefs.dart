@@ -7,6 +7,7 @@ import 'main.dart';
 
 class SharedPref {
   MyRecipeProvider myRecipeProvider = MyRecipeProvider();
+
   read(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return await json.decode(prefs.getString(key) ?? "");

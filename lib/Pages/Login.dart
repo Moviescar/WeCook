@@ -8,6 +8,7 @@ import 'package:flutter_application_1/Widgets/Header.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../BackendService.dart';
+import '../Widgets/InternetDialog.dart';
 import '../main.dart';
 import 'Signup.dart';
 import '../SharedPrefs.dart';
@@ -86,6 +87,9 @@ class _LoginState extends State<Login> {
                       onPressed: () async {
                         if(await backendService.login(email.text, password.text)){
                           Navigator.pushNamed(context, '/recipeList');
+                        }else{
+                          InternetDialog internetDialog = InternetDialog();
+                          internetDialog.showcontent(context);
                         }
                       },
                       child: const Text('Login'),

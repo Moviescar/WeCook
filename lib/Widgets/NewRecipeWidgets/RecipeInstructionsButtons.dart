@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Models/ShowElement.dart';
 import 'package:flutter_application_1/Providers/MyRecipeProvider.dart';
+import 'package:flutter_application_1/Widgets/InternetDialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/Instruction.dart';
@@ -21,9 +22,35 @@ getUserId() async{
   return id;
 }
 
-
-
 Visibility RecipeInstructionsButtons(BuildContext context){
+
+  void _showcontent() {
+    showDialog(
+      context: context, barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const [
+                Text('You have no internet to peform this action.'),
+              ],
+            ),
+          ),
+          actions: [
+            FlatButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
   RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
   MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
@@ -42,7 +69,7 @@ Visibility RecipeInstructionsButtons(BuildContext context){
           },
           child: const Text('Previous Step'),
         ),
-        Spacer(),
+        const Spacer(),
         ElevatedButton(
           onPressed: () {
             newRecipeProvider.addInstruction(Instruction(stepNumber: newRecipeProvider.amountOfSteps, instruction:newRecipeProvider.stepInstruction.text));
@@ -53,26 +80,32 @@ Visibility RecipeInstructionsButtons(BuildContext context){
           },
           child: const Text('Add Instruction'),
         ),
-        Spacer(),
+        const Spacer(),
         ElevatedButton(
           onPressed: () async {
-            int ownerId = await getUserId();
-            await http.post(
-              Uri.parse('${MyApp.urlPrefix}/recipe'),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(<String, dynamic>{
-                "account": ownerId,
-                "recipeName": newRecipeProvider.recipeName.text,
-                "ingredient": newRecipeProvider.ingredients,
-                "step": newRecipeProvider.instructions
-              }
-              ),
-            );
-            service.getAllUserRecipes();
-            newRecipeProvider.resetNewRecipe();
-            Navigator.pushNamed(context, '/recipeList');
+            try{
+              int ownerId = await getUserId();
+              await http.post(
+                Uri.parse('${MyApp.urlPrefix}/recipe'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(<String, dynamic>{
+                  "account": ownerId,
+                  "recipeName": newRecipeProvider.recipeName.text,
+                  "ingredient": newRecipeProvider.ingredients,
+                  "step": newRecipeProvider.instructions
+                }
+                ),
+              );
+              service.getAllUserRecipes();
+              newRecipeProvider.resetNewRecipe();
+              Navigator.pushNamed(context, '/recipeList');
+            }catch(e){
+              InternetDialog internetDialog = InternetDialog();
+              internetDialog.showcontent(context);
+            }
+
           },
           child: const Text('Next Step'),
         ),

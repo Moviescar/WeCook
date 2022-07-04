@@ -122,7 +122,7 @@ class MyRecipe extends StatelessWidget {
                                             width: 80,
                                             child: InkWell(
                                               onTap: () {
-                                                Navigator.pushNamed(context, '/recipeElement', arguments: getUserAndRecipe(myRecipeProvider.user.recipe[index].id, myRecipeProvider));
+                                                Navigator.pushNamed(context, '/myRecipeElement', arguments: getUserAndRecipe(myRecipeProvider.user.recipe[index].id, myRecipeProvider));
                                               },
                                               child: Container(
                                                 constraints: const BoxConstraints(
