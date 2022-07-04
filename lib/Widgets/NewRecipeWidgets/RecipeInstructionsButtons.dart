@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Models/ShowElement.dart';
+import 'package:flutter_application_1/Providers/MyRecipeProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/Instruction.dart';
@@ -25,7 +26,8 @@ getUserId() async{
 Visibility RecipeInstructionsButtons(BuildContext context){
   NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
   RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
-  BackendService service = BackendService();
+  MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
+  BackendService service = BackendService(recipeListProvider,myRecipeProvider);
 
   return Visibility(
     maintainSize: true,

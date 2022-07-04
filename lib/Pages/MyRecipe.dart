@@ -66,10 +66,7 @@ class MyRecipe extends StatelessWidget {
                   itemCount: myRecipeProvider.user.recipe.length,
                   itemBuilder: (_,index) =>
                       Visibility(
-                        visible: myRecipeProvider.user.recipe[index].recipeName != '' &&
-                            myRecipeProvider.user.recipe[index].ingredient.isNotEmpty  &&
-                            myRecipeProvider.user.recipe[index].step.isNotEmpty && (
-                            myRecipeProvider.user.recipe[index].recipeName.contains(myRecipeProvider.searchInput)),
+                        visible: myRecipeProvider.user.recipe[index].recipeName.contains(myRecipeProvider.searchInput),
                         child: Column(
                             children: [
                               SizedBox(width: 20),

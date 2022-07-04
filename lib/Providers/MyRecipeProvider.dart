@@ -11,6 +11,7 @@ class MyRecipeProvider with ChangeNotifier{
 
   set user(User value) {
     _user = value;
+    notifyListeners();
   }
   get searchInput => _searchInput;
 

@@ -79,7 +79,7 @@ class _RecipeListState extends State<RecipeList> {
                     visible: recipeListProvider.recipe[index].recipeName != '' &&
                         recipeListProvider.recipe[index].ingredient.isNotEmpty  &&
                         recipeListProvider.recipe[index].step.isNotEmpty && (
-                        recipeListProvider.recipe[index].recipeName.contains(recipeListProvider.searchInput)),
+                        recipeListProvider.recipe[index].recipeName.contains(recipeListProvider.searchInput) || recipeListProvider.searchInput == ""),
                     child: Column(
                       children: [
                         SizedBox(width: 20),

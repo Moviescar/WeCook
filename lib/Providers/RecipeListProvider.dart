@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Models/User.dart';
-import 'package:flutter_application_1/SharedPrefs.dart';
 import '../Models/Recipe.dart';
-import '../main.dart';
 
 class RecipeListProvider with ChangeNotifier{
   List<User> _users = [];
@@ -22,6 +18,7 @@ class RecipeListProvider with ChangeNotifier{
         _recipe.add(recipe);
       }
     }
+    notifyListeners();
   }
 
   List<Recipe> get recipe => _recipe;

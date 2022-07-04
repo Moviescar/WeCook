@@ -38,10 +38,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
     MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
-
-    BackendService backendService = BackendService();
+    RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
+    BackendService backendService = BackendService(recipeListProvider, myRecipeProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: Header(),
@@ -85,8 +84,9 @@ class _LoginState extends State<Login> {
                     width: 160,
                     child: ElevatedButton(
                       onPressed: () async {
-                        backendService.login(email.text, password.text);
-                        Navigator.pushNamed(context, '/recipeList');
+                        if(await backendService.login(email.text, password.text)){
+                          Navigator.pushNamed(context, '/recipeList');
+                        }
                       },
                       child: const Text('Login'),
                     ),
