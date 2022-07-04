@@ -24,37 +24,10 @@ getUserId() async{
 
 Visibility RecipeInstructionsButtons(BuildContext context){
 
-  void _showcontent() {
-    showDialog(
-      context: context, barrierDismissible: false, // user must tap button!
-
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const [
-                Text('You have no internet to peform this action.'),
-              ],
-            ),
-          ),
-          actions: [
-            FlatButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
   RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
   MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
-  BackendService service = BackendService(recipeListProvider,myRecipeProvider);
+  BackendService backendService = BackendService(recipeListProvider,myRecipeProvider);
 
   return Visibility(
     maintainSize: true,
@@ -74,7 +47,7 @@ Visibility RecipeInstructionsButtons(BuildContext context){
           onPressed: () {
             newRecipeProvider.addInstruction(Instruction(stepNumber: newRecipeProvider.amountOfSteps, instruction:newRecipeProvider.stepInstruction.text));
             newRecipeProvider.incrementAmountOfInstructions();
-            newRecipeProvider.addShowInstruction(ShowElement(TextOverflow.ellipsis, 3));
+            newRecipeProvider.addShowInstruction(ShowElement(TextOverflow.ellipsis, 2));
             newRecipeProvider.stepInstruction.text = "";
             FocusManager.instance.primaryFocus?.unfocus();
           },
@@ -98,7 +71,7 @@ Visibility RecipeInstructionsButtons(BuildContext context){
                 }
                 ),
               );
-              service.getAllUserRecipes();
+              backendService.updateAllData();
               newRecipeProvider.resetNewRecipe();
               Navigator.pushNamed(context, '/recipeList');
             }catch(e){

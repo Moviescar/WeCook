@@ -92,11 +92,12 @@ class BackendService {
   delete(int? id, context) async {
     try{
       await http.delete(
-        Uri.parse('${MyApp.urlPrefix}/user/login/${id}'),
+        Uri.parse('${MyApp.urlPrefix}/recipe/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      await updateAllData();
     }catch(e){
       InternetDialog internetDialog = InternetDialog();
       return internetDialog.showcontent(context);

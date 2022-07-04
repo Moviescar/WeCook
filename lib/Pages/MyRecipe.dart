@@ -29,7 +29,7 @@ class MyRecipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
+    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: true);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: Header(),

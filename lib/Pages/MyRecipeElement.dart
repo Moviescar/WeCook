@@ -24,6 +24,8 @@ class _MyRecipeElementState extends State<MyRecipeElement> {
 
   @override
   Widget build(BuildContext context) {
+    RecipeListProvider recipeListProvider = Provider.of(context, listen: true);
+    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: true);
     var userAndRecipe = ModalRoute.of(context)!.settings.arguments as UserAndRecipe;
     userAndRecipe.recipe.step.sort((a, b) => a.stepNumber.compareTo(b.stepNumber));
 
@@ -128,7 +130,6 @@ class _MyRecipeElementState extends State<MyRecipeElement> {
             ),
             Row(
               children: [
-                Spacer(),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/recipeList');
@@ -137,16 +138,13 @@ class _MyRecipeElementState extends State<MyRecipeElement> {
                 ),
                 Spacer(),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/recipeList');
-                    RecipeListProvider recipeListProvider = Provider.of(context, listen: true);
-                    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
+                  onPressed: () async {
+                    Navigator.pushNamed(context, '/myRecipe');
                     BackendService backendService = BackendService(recipeListProvider, myRecipeProvider);
-                    backendService.delete(userAndRecipe.recipe.id, context);
+                    await backendService.delete(userAndRecipe.recipe.id, context);
                   },
                   child: const Text('Delete'),
                 ),
-                Spacer(),
               ],
             ),
             SizedBox(height: 30),

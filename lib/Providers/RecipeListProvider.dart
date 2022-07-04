@@ -18,7 +18,6 @@ class RecipeListProvider with ChangeNotifier{
         _recipe.add(recipe);
       }
     }
-    notifyListeners();
   }
 
   List<Recipe> get recipe => _recipe;

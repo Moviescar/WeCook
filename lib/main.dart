@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Models/User.dart';
 import 'package:flutter_application_1/Pages/MyRecipe.dart';
 import 'package:flutter_application_1/Pages/MyRecipeElement.dart';
@@ -30,7 +31,6 @@ void main() async{
   }else{
     initialRoute = '/login';
   }
-
   final MyApp myApp = MyApp(
     initialRoute: initialRoute,
   );
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               recipeListProvider.users = userListFromJson(snapshot.data.toString());
               return const RecipeList();
             }else{
-              return const SplashScreen();
+              return SplashScreen();
             }
           }),
           '/login': (context) => Login(),

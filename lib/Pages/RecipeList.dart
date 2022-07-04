@@ -54,13 +54,16 @@ class _RecipeListState extends State<RecipeList> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              Container(
-                height: 100,
-                padding: EdgeInsets.only(top: 30),
-                child: const Text("Recipe's made by the community",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.orangeAccent
+              Visibility(
+                visible: MediaQuery.of(context).orientation == Orientation.portrait,
+                child: Container(
+                  height: 100,
+                  padding: EdgeInsets.only(top: 30),
+                  child: const Text("Recipe's made by the community",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.orangeAccent
+                    ),
                   ),
                 ),
               ),

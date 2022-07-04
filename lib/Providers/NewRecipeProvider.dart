@@ -169,8 +169,18 @@ class NewRecipeProvider with ChangeNotifier {
     stepInstruction.text = "";
   }
 
+  resetLists(){
+    _ingredients = [];
+    _instructions = [];
+    _showInstruction = [];
+    _showIngredient = [];
+    _amountOfIngredients = 0;
+    _amountOfSteps = 0;
+  }
+
   resetNewRecipe(){
     resetControllers();
+    resetLists();
     toggleIngredientAndInstructions();
     toggleNameAndIngredients();
   }
