@@ -8,6 +8,7 @@ import '../../Models/Instruction.dart';
 import '../../Models/User.dart';
 import '../../Providers/NewRecipeProvider.dart';
 import '../../Providers/RecipeListProvider.dart';
+import '../../BackendService.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/SharedPrefs.dart';
@@ -19,9 +20,13 @@ getUserId() async{
   return id;
 }
 
+
+
 Visibility RecipeInstructionsButtons(BuildContext context){
   NewRecipeProvider newRecipeProvider = Provider.of(context, listen: false);
   RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
+  BackendService service = BackendService();
+
   return Visibility(
     maintainSize: true,
     maintainAnimation: true,
@@ -50,7 +55,7 @@ Visibility RecipeInstructionsButtons(BuildContext context){
         ElevatedButton(
           onPressed: () async {
             int ownerId = await getUserId();
-            final response = await http.post(
+            await http.post(
               Uri.parse('${MyApp.urlPrefix}/recipe'),
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -63,7 +68,8 @@ Visibility RecipeInstructionsButtons(BuildContext context){
               }
               ),
             );
-            recipeListProvider.getAllUserRecipes();
+            service.getAllUserRecipes();
+            newRecipeProvider.resetNewRecipe();
             Navigator.pushNamed(context, '/recipeList');
           },
           child: const Text('Next Step'),

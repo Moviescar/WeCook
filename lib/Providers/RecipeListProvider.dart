@@ -11,7 +11,7 @@ class RecipeListProvider with ChangeNotifier{
   List<Recipe> _recipe = [];
   List<User> get users => _users;
 
-  var _searchInput;
+  var _searchInput= "";
 
   set users(List<User> users) {
     _users = [];
@@ -26,24 +26,8 @@ class RecipeListProvider with ChangeNotifier{
 
   List<Recipe> get recipe => _recipe;
 
-  getAllUserRecipes() async {
-    SharedPref sharedPref = SharedPref();
-    final response = await http.get(
-      Uri.parse('${MyApp.urlPrefix}/user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    List<User> userList = [];
-    var parsedJson = json.decode(response.body);
-    for(var user in parsedJson){
-      userList.add(User.fromJson(user));
-    }
-    sharedPref.save('users', userList);
-    users = userList;
-    notifyListeners();
-  }
-  updateSearchInput(newInput){
+
+  updateSearchInput(String newInput){
     _searchInput = newInput;
     notifyListeners();
   }

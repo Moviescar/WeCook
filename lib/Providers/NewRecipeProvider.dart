@@ -88,6 +88,10 @@ class NewRecipeProvider with ChangeNotifier {
     _sharedPref = value;
     notifyListeners();
   }
+
+  List<ShowElement> get showInstruction => _showInstruction;
+  List<ShowElement> get showIngredient => _showIngredient;
+
   addIngredient(Ingredient value) {
     _ingredients.add(value);
     notifyListeners();
@@ -157,6 +161,18 @@ class NewRecipeProvider with ChangeNotifier {
       list[index].overflow = TextOverflow.ellipsis;
     }
   }
-  List<ShowElement> get showInstruction => _showInstruction;
-  List<ShowElement> get showIngredient => _showIngredient;
+
+  resetControllers(){
+    recipeName.text = "";
+    ingredientAmount.text = "";
+    ingredientName.text = "";
+    stepInstruction.text = "";
+  }
+
+  resetNewRecipe(){
+    resetControllers();
+    toggleIngredientAndInstructions();
+    toggleNameAndIngredients();
+  }
+
 }

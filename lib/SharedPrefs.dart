@@ -1,7 +1,12 @@
+import 'package:flutter_application_1/Providers/MyRecipeProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import 'Models/User.dart';
+import 'main.dart';
+
 class SharedPref {
+  MyRecipeProvider myRecipeProvider = MyRecipeProvider();
   read(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return await json.decode(prefs.getString(key) ?? "");
@@ -16,4 +21,6 @@ class SharedPref {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
   }
+
+
 }

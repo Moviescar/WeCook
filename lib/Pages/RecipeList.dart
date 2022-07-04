@@ -24,7 +24,7 @@ BoxDecoration myBoxDecoration() {
 
 class _RecipeListState extends State<RecipeList> {
 
-  TextEditingController searchInput = TextEditingController();
+  TextEditingController searchInput = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +78,8 @@ class _RecipeListState extends State<RecipeList> {
                   Visibility(
                     visible: recipeListProvider.recipe[index].recipeName != '' &&
                         recipeListProvider.recipe[index].ingredient.isNotEmpty  &&
-                        recipeListProvider.recipe[index].step.isNotEmpty &&
-                        recipeListProvider.recipe[index].recipeName.contains(recipeListProvider.searchInput),
+                        recipeListProvider.recipe[index].step.isNotEmpty && (
+                        recipeListProvider.recipe[index].recipeName.contains(recipeListProvider.searchInput)),
                     child: Column(
                       children: [
                         SizedBox(width: 20),
@@ -165,7 +165,7 @@ class _RecipeListState extends State<RecipeList> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/recipeList');
+                      Navigator.pushNamed(context, '/myRecipe');
                     },
                     child: const Text("My Recipe's"),
                   ),

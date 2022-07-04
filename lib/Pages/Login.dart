@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Models/User.dart';
 import 'package:flutter_application_1/Pages/NewRecipeMaker.dart';
+import 'package:flutter_application_1/Providers/MyRecipeProvider.dart';
 import 'package:flutter_application_1/Providers/RecipeListProvider.dart';
 import 'package:flutter_application_1/Widgets/Header.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import '../BackendService.dart';
 import '../main.dart';
 import 'Signup.dart';
 import '../SharedPrefs.dart';
@@ -37,6 +39,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     RecipeListProvider recipeListProvider = Provider.of(context, listen: false);
+    MyRecipeProvider myRecipeProvider = Provider.of(context, listen: false);
+
+    BackendService backendService = BackendService();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: Header(),
@@ -80,22 +85,8 @@ class _LoginState extends State<Login> {
                     width: 160,
                     child: ElevatedButton(
                       onPressed: () async {
-                         final response = await http.post(
-                            Uri.parse('${MyApp.urlPrefix}/user/login'),
-                            headers: <String, String>{
-                            'Content-Type': 'application/json; charset=UTF-8',
-                            },
-                            body: jsonEncode(<String, String>{
-                              'email': email.text,
-                              'password': password.text,
-                              }
-                            ),
-                          );
-                        if(response.body.isNotEmpty){
-                          sharedPref.save('user', response.body);
-                          await recipeListProvider.getAllUserRecipes();
-                          Navigator.pushNamed(context, '/recipeList');
-                        }
+                        backendService.login(email.text, password.text);
+                        Navigator.pushNamed(context, '/recipeList');
                       },
                       child: const Text('Login'),
                     ),
